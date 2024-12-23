@@ -82,7 +82,7 @@ export const userSecretDALFactory = (db: TDbClient) => {
     organizationId: string,
     data: Partial<Pick<TUserSecrets, "name" | "encryptedData">>,
     tx?: Knex
-  ): Promise<TUserSecrets> => {
+  ): Promise<TUserSecrets | undefined> => {
     try {
       const [secret] = await (tx || db)(TableName.UserSecrets)
         .where({ id, organizationId })
@@ -90,13 +90,6 @@ export const userSecretDALFactory = (db: TDbClient) => {
           ...data
         })
         .returning(selectAllTableCols(TableName.UserSecrets));
-
-      if (!secret) {
-        throw new DatabaseError({
-          error: new Error("No secret found to update"),
-          name: "Update User Secret"
-        });
-      }
 
       return secret;
     } catch (error) {

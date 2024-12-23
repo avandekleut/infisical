@@ -157,12 +157,6 @@ export const userSecretServiceFactory = (
   }: TUpdateUserSecretDTO): Promise<TUserSecretResponse> => {
     await validatePermission({ actor, actorId, actorAuthMethod, actorOrgId }, OrgPermissionActions.Edit);
 
-    // TODO: As transaction
-    const secret = await userSecretDAL.findUserSecretById(secretId, actorOrgId);
-    if (!secret) {
-      throw new NotFoundError({ message: "User secret not found" });
-    }
-
     const updateData: { name?: string; encryptedData?: string } = {};
     if (name !== undefined) {
       updateData.name = name;
@@ -173,12 +167,15 @@ export const userSecretServiceFactory = (
 
     // Don't make the update call if there's nothing to update
     if (Object.keys(updateData).length === 0) {
-      return formatSecretResponse(secret, JSON.parse(decryptSecretData(secret.encryptedData)) as TUserSecretData);
+      throw new Error("No fields to update");
     }
 
     const updatedSecret = await userSecretDAL.updateUserSecretById(secretId, actorOrgId, updateData);
-    const decryptedData = decryptSecretData(updatedSecret.encryptedData);
+    if (!updatedSecret) {
+      throw new NotFoundError({ message: "User secret not found" });
+    }
 
+    const decryptedData = decryptSecretData(updatedSecret.encryptedData);
     return formatSecretResponse(updatedSecret, JSON.parse(decryptedData) as TUserSecretData);
   };
 
