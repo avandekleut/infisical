@@ -5,7 +5,6 @@ import { FormControl, Input } from "@app/components/v2";
 // Generic type that ensures the form data has a name field
 type FormWithName = {
   name: string;
-  [key: string]: any;
 };
 
 type Props<T extends FieldValues & FormWithName> = {

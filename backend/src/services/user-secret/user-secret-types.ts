@@ -11,7 +11,6 @@ export enum UserSecretType {
   SECURE_NOTE = "SECURE_NOTE"
 }
 
-// Permission type (from secret-sharing)
 export type TUserSecretPermission = {
   actor: ActorType;
   actorId: string;
@@ -64,7 +63,6 @@ export type TDeleteUserSecretDTO = {
   secretId: string;
 } & TUserSecretPermission;
 
-// Response types (matching frontend contract)
 export type TUserSecretResponse = {
   id: string;
   name: string;

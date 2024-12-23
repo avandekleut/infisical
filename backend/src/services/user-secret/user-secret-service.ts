@@ -163,7 +163,6 @@ export const userSecretServiceFactory = (
       throw new NotFoundError({ message: "User secret not found" });
     }
 
-    // Only include fields that are actually being updated
     const updateData: { name?: string; encryptedData?: string } = {};
     if (name !== undefined) {
       updateData.name = name;
