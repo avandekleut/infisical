@@ -11,7 +11,7 @@ export async function up(knex: Knex): Promise<void> {
 
       // Add organizationId column
       table.uuid("organizationId").notNullable().references("id").inTable(TableName.Organization).onDelete("CASCADE");
-      table.uuid("createdBy").notNullable().references("id").inTable(TableName.Users).onDelete("CASCADE");
+      table.uuid("createdBy").notNullable().references("id").inTable(TableName.Users);
 
       // Data fields
       table.string("name", 255).notNullable();
